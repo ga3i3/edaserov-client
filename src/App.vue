@@ -1,32 +1,45 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <AppHeader v-if="!over" />
+    <v-main :class="'main_layout ' + $router.currentRoute.name" v-if="!over">
+      <router-view />
+    </v-main>
+    <AppBottomNav v-if="!over" />
+    <AppNavigationDrawer v-if="!over" />
+
+    <v-dialog v-model="over" persistent max-width="400">
+      <v-card elevation="0">
+        <v-alert type="warning"
+          >Просим прощение, идёт технические работы...</v-alert
+        >
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import ScreenSizeDetector from "screen-size-detector";
 
-#nav {
-  padding: 30px;
+import AppHeader from "./components/AppHeader.vue";
+import AppBottomNav from "./components/AppBottomNav.vue";
+import AppNavigationDrawer from "./components/AppNavigationDrawer.vue";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+export default {
+  name: "App",
+  components: {
+    AppHeader,
+    AppBottomNav,
+    AppNavigationDrawer,
+  },
+  data: () => ({
+    over: false,
+  }),
+  created() {
+    // const screen = new ScreenSizeDetector();
+    // if (screen.width > 500) {
+    //   this.over = true;
+    // }
+  },
+  mounted() {},
+};
+</script>

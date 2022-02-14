@@ -1,0 +1,263 @@
+img {
+	width: 100%;
+}
+.v-main {
+	margin-top: 66px;
+	margin-bottom: 56px;
+}
+
+.products {
+	padding: 10px;
+}
+
+.app_header {
+
+	.v-toolbar__content {
+		border-bottom: 1px solid #ddd !important;
+	}
+
+	.logo_wrap {
+		width: 35px;
+		height: 35px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		padding: 7px;
+		border-radius: 10px;
+		img {
+			width: 100%;
+		}
+	}
+
+	.v-toolbar__title {
+		overflow: visible;
+		padding-left: 10px;
+
+		.site_name {
+			font-size: 16px;
+			display: flex;
+			align-items: center;
+			padding-left: 10px;
+			font-weight: 600;
+		}
+	}
+
+	.goback {
+
+
+		i {
+			font-size: 30px !important;
+		}
+	}
+}
+
+
+.v-main.Profile {
+	margin: 0 0 56px 0 !important;
+}
+
+
+/* CAROUSEL */
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+	width: 170px !important;
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+}
+
+.cat {	
+	// width: 160px !important;
+	height: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	padding: 15px;
+
+	img {
+		width: 77px;
+	}
+}
+
+.home {
+	.swiper-slide {
+		border-radius: 15px;
+	}
+	.swiper-slide.cat-0 {
+		background: rgb(188, 234, 192);
+	}
+
+	.swiper-slide.cat-1 {
+		background: rgb(250, 224, 252)
+	}
+
+	.swiper-slide.cat-2 {
+		background: rgb(247, 239, 202)
+	}
+
+	.swiper-slide.cat-3 {
+		background: rgb(247, 223, 202)
+	}
+	
+	.swiper-slide.cat-4 {
+		background: rgb(210, 202, 247)
+	}
+
+	.swiper-slide.cat-5 {
+		background: rgb(202, 238, 247)
+	}
+}
+
+
+/* products */
+
+.products {
+	padding: 20px;
+}
+
+.products ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	
+
+	.v-card__title {
+		font-size: 17px;
+
+		span {
+			font-family: 'Roboto', sans-serif;
+			font-style: normal;
+			font-weight: 300;
+			font-size: 14px;
+			letter-spacing: 0;
+			line-height: 1.5;
+			color: #777c83;
+		}
+	}
+
+	.price {
+		font-family: 'Roboto', sans-serif;
+		font-style: normal;
+		font-weight: 500;
+		font-size: 18px;
+		letter-spacing: 0.03em;
+		color: #424242;
+	}
+
+	.v-card__actions {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	
+	.v-btn {
+		border-radius: 9px;
+	}
+
+	.quantity {
+		button:first-child {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+
+			i {
+				font-size: 16px;
+			}
+		}
+		button:nth-child(2) {
+			border-radius: 0;
+			font-size: 16px;
+		}
+		button:last-child {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			
+			i {
+				font-size: 16px;
+			}
+		}
+	}
+
+	.v-card__actions {
+		height: 52px;
+	}
+}
+
+.v-sheet {
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+}
+
+/* cart */
+
+.remove_all_products.v-card {
+	border-radius: 15px !important;
+}
+
+/* default */
+
+.default {
+	padding: 20px;
+}
+
+/* cehckout */
+
+.v-input__slot::before,
+.v-input__slot::after {
+	display: none !important;
+	border: none !important;
+}
+
+.v-input__slot,
+.v-input__slot {
+	border: none !important;
+	border-radius: 15px !important;
+}
+.time_input input {
+  font-family: "Roboto", sans-serif;
+}
+
+.time_input input::placeholder {
+	font-family: 'Raleway', sans-serif;
+}
+
+.time_picker .v-picker__title,
+.time_picker .v-picker__body {
+  font-family: "Roboto", sans-serif;
+}
+
+#rules_wrap {
+	height: calc(100vh - 56px);
+	overflow-y: scroll;
+}
+
+
+
+/* homescreen */
+
+.v-alert {
+  margin: 0 !important;
+}
