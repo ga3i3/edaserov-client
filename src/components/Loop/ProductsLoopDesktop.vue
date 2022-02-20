@@ -1,5 +1,5 @@
 <template>
-  <div class="products">
+  <div class="products_desktop">
     <ul>
       <li v-for="(product, index) in $store.state.products" :key="index">
         <template
@@ -14,6 +14,23 @@
             >
 
             <v-card-text>{{ product.description }}</v-card-text>
+
+            <v-divider class="mx-4"></v-divider>
+
+            <div class="options" v-if="product.options.length != 0">
+              <v-radio-group>
+                <v-radio
+                  v-for="(option, index) in product.options"
+                  :key="index"
+                  :value="option"
+                  @change="changeOption(product._id, option)"
+                >
+                  <template #label>
+                    {{ option.name }} <span>+{{ option.price }} ₽</span>
+                  </template>
+                </v-radio>
+              </v-radio-group>
+            </div>
 
             <v-divider class="mx-4"></v-divider>
 
@@ -65,7 +82,7 @@
       </li>
     </ul>
 
-    <v-bottom-sheet v-model="select" inset :attach="true" :persistent="true">
+    <!-- <v-bottom-sheet v-model="select" inset :attach="true" :persistent="true">
       <v-sheet class="pa-5" height="250px">
         <h3 class="text-lg-h6 text-left">Выберите опцию</h3>
         <v-radio-group>
@@ -78,7 +95,7 @@
           ></v-radio>
         </v-radio-group>
       </v-sheet>
-    </v-bottom-sheet>
+    </v-bottom-sheet> -->
   </div>
 </template>
 
@@ -91,6 +108,10 @@ export default {
     productOptions: "",
     productId: "",
     products: [],
+    currentProduct: {
+      id: "",
+      value: {},
+    },
   }),
   async created() {
     // console.log(this.$store.state.cart);
@@ -127,7 +148,10 @@ export default {
         image: product.image,
         stock: product.stock,
         weight: product.weight,
-        select: "",
+        select:
+          this.currentProduct.id == product._id
+            ? this.currentProduct.option
+            : {},
       });
       this.productId = product._id;
       this.productOptions = product.options;
@@ -172,9 +196,66 @@ export default {
         this.select = false;
       }, 500);
     },
+
+    changeOption(id, option) {
+      this.currentProduct.id = id;
+      this.currentProduct.option = option;
+
+      let indexProductInCart = this.$store.state.cart.findIndex(
+        (x) => x.id === id
+      );
+
+      if (indexProductInCart > -1) {
+        this.$store.state.cart[indexProductInCart].select = option;
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+
+  > li {
+    width: calc(33% - 15px);
+    margin-right: 15px;
+    align-self: baseline;
+
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+}
+
+.v-card__title {
+  position: relative;
+  font-size: 18px;
+
+  span {
+    // position: absolute;
+    // bottom: 16px;
+    // right: 16px;
+    font-family: "Exo 2", sans-serif;
+    font-size: 14px;
+    color: rgb(80, 80, 80);
+  }
+}
+
+.price {
+  font-family: "Exo 2", sans-serif;
+}
+
+.v-card__actions {
+  padding-left: 16px;
+  padding-right: 16px;
+  height: 52px;
+}
+
+.options {
+  padding: 0 16px;
+}
 </style>

@@ -54,7 +54,8 @@ img {
 
 
 .v-main.Profile {
-	margin: 0 0 56px 0 !important;
+	margin-bottom: 56px !important;
+	margin-top: 0 !important;
 }
 
 
@@ -101,9 +102,11 @@ img {
 	img {
 		width: 77px;
 	}
+
+	
 }
 
-.home {
+.home, .pc__cats {
 	.swiper-slide {
 		border-radius: 15px;
 	}
@@ -167,6 +170,8 @@ img {
 		font-size: 18px;
 		letter-spacing: 0.03em;
 		color: #424242;
+
+		
 	}
 
 	.v-card__actions {
@@ -255,9 +260,19 @@ img {
 }
 
 
+.phone input {
+  font-family: "Exo 2", sans-serif;
+	font-weight: 300;
+}
 
 /* homescreen */
 
 .v-alert {
   margin: 0 !important;
+}
+
+
+.v-bottom-sheet {
+	border-top-left-radius: 30px !important;
+	border-top-right-radius: 30px !important;
 }

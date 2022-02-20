@@ -9,6 +9,8 @@
           label="Номер телефона"
           :hide-details="true"
           class="mb-5"
+          v-model="form_auth.phone"
+          v-mask="'(###) ### ## ##'"
         ></v-text-field>
         <v-text-field
           filled
@@ -16,9 +18,10 @@
           type="password"
           :hide-details="true"
           class="mb-5"
+          v-model="form_auth.password"
         ></v-text-field>
         <div class="actions d-flex mb-10">
-          <v-btn color="primary" large depressed>Войти</v-btn>
+          <v-btn color="primary" large depressed @click="signin">Войти</v-btn>
           <v-btn
             color="accent"
             large
@@ -44,6 +47,7 @@
       <h2 class="text-center">Регистрация</h2>
       <div class="fields mt-5 pl-5 pr-5">
         <v-text-field
+          v-model="form_reg.name"
           filled
           label="Имя"
           :hide-details="true"
@@ -51,13 +55,25 @@
           prepend-inner-icon="mdi-account"
         ></v-text-field>
         <v-text-field
+          v-model="form_reg.phone"
           filled
           label="Номер телефона"
           :hide-details="true"
           class="mb-5"
           prepend-inner-icon="mdi-phone"
+          v-mask="'(###) ### ## ##'"
         ></v-text-field>
         <v-text-field
+          v-model="form_reg.email"
+          filled
+          label="Email"
+          type="email"
+          :hide-details="true"
+          class="mb-5"
+          prepend-inner-icon="mdi-at"
+        ></v-text-field>
+        <v-text-field
+          v-model="form_reg.pass"
           filled
           label="Пароль"
           type="password"
@@ -67,6 +83,7 @@
         ></v-text-field>
 
         <v-text-field
+          v-model="form_reg.repass"
           filled
           label="Повторите пароль"
           type="password"
@@ -86,7 +103,9 @@
             <v-icon left> mdi-chevron-left </v-icon>
             Войти
           </v-btn>
-          <v-btn color="primary" large depressed>Регистрация</v-btn>
+          <v-btn color="primary" large depressed @click="signup"
+            >Регистрация</v-btn
+          >
         </div>
       </div>
 
@@ -129,6 +148,21 @@
         <Privacy />
       </v-sheet>
     </v-bottom-sheet>
+
+    <v-snackbar
+      v-model="snackbar.status"
+      color="accent"
+      rounded="pill"
+      elevation="0"
+      timeout="2500"
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="snackbar.status = false">
+          Закрыть
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -143,11 +177,95 @@ export default {
   data: () => ({
     auth: "signin",
     privacy: false,
+    snackbar: {
+      text: "",
+      status: false,
+    },
+
+    form_reg: {
+      name: "",
+      phone: "",
+      email: "",
+      pass: "",
+      repass: "",
+    },
+    form_auth: {
+      phone: "",
+      password: "",
+    },
   }),
   created() {
     this.$store.state.currentRoute = "Профиль";
+    if (localStorage.getItem("token") !== null) {
+      this.$router.push("/account");
+    }
   },
   watch: {},
+  methods: {
+    signup() {
+      let data = {
+        name: this.form_reg.name,
+        phone: this.form_reg.phone,
+        email: this.form_reg.email,
+        password: this.form_reg.pass,
+        repass: this.form_reg.repass,
+      };
+
+      if (data.name && data.phone && data.email) {
+        if (data.password.length != 0 && data.repass.length != 0) {
+          if (data.password.length >= 5 && data.repass.length >= 5) {
+            this.$axios
+              .post(`${process.env.VUE_APP_MAIN_URL}/user`, data)
+              .then((res) => {
+                localStorage.setItem("token", res.data.token);
+
+                this.$router.push("/account");
+              })
+              .catch((err) => {
+                if (err.response.data.error == "email in use") {
+                  this.snackbar.text = "Идентичный аккаунт уже существует";
+                  this.snackbar.status = true;
+                }
+              });
+          } else {
+            this.snackbar.text = "У вас легкий пароль";
+            this.snackbar.status = true;
+          }
+        } else {
+          this.snackbar.text = "Введите пароль";
+          this.snackbar.status = true;
+        }
+      } else {
+        this.snackbar.text = "Заполните все поля";
+        this.snackbar.status = true;
+      }
+    },
+    signin() {
+      let data = {
+        phone: this.form_auth.phone,
+        password: this.form_auth.password,
+      };
+
+      if (data.phone.length == 15 && data.password.length != 0) {
+        this.$axios
+          .post(`${process.env.VUE_APP_MAIN_URL}/user/login`, data)
+          .then((res) => {
+            localStorage.setItem("token", res.data.token);
+
+            this.$router.push("/account");
+          })
+          .catch((err) => {
+            if (err.response.status == 401) {
+              this.snackbar.text = "Не правильный номер или пароль";
+              this.snackbar.status = true;
+            }
+          });
+      } else {
+        this.snackbar.text = "Введите корректный номер и пароль";
+        this.snackbar.status = true;
+      }
+    },
+  },
 };
 </script>
 

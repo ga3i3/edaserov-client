@@ -42,6 +42,14 @@
       >
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
+
+      <v-divider
+        vertical
+        v-if="$router.currentRoute.path == '/account'"
+      ></v-divider>
+      <v-btn icon v-if="$router.currentRoute.path == '/account'">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
   </v-card>
 </template>

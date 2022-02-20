@@ -84,7 +84,7 @@
 
 <script>
 export default {
-  name: "ProductsLoop",
+  name: "ProductsLoopMobile",
   data: () => ({
     select: false,
     quantityToggle: [],
@@ -130,8 +130,10 @@ export default {
         select: "",
       });
       this.productId = product._id;
-      this.productOptions = product.options;
-      this.select = true;
+      if (Object.keys(product.options).length != 0) {
+        this.productOptions = product.options;
+        this.select = true;
+      }
     },
     currentProductQuantity(id) {
       let indexProductInCart = this.$store.state.cart.findIndex(

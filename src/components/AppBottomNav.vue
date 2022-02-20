@@ -21,7 +21,9 @@
       </v-badge>
     </v-btn>
 
-    <v-btn to="/profile">
+    <v-btn
+      :to="Object.keys($store.state.user).lenght != 0 ? '/account' : '/profile'"
+    >
       <span>Профиль</span>
       <v-icon>mdi-account</v-icon>
     </v-btn>

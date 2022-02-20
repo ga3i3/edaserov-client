@@ -1,19 +1,20 @@
 <template>
   <v-app>
-    <AppHeader v-if="!over" />
+    <AppHeader v-if="getSize <= 500" />
+    <AppHeaderDesktop v-if="getSize > 500" />
+    <AppHeaderBottomCats
+      v-if="
+        getSize > 500 &&
+        $router.currentRoute.path != '/account' &&
+        $router.currentRoute.path != '/profile' &&
+        $router.currentRoute.path != '/checkout'
+      "
+    />
     <v-main :class="'main_layout ' + $router.currentRoute.name" v-if="!over">
       <router-view />
     </v-main>
-    <AppBottomNav v-if="!over" />
-    <AppNavigationDrawer v-if="!over" />
-
-    <v-dialog v-model="over" persistent max-width="400">
-      <v-card elevation="0">
-        <v-alert type="warning"
-          >Просим прощение, идёт технические работы...</v-alert
-        >
-      </v-card>
-    </v-dialog>
+    <AppBottomNav v-if="getSize < 500" />
+    <AppNavigationDrawer v-if="getSize < 500" />
   </v-app>
 </template>
 
@@ -24,22 +25,46 @@ import AppHeader from "./components/AppHeader.vue";
 import AppBottomNav from "./components/AppBottomNav.vue";
 import AppNavigationDrawer from "./components/AppNavigationDrawer.vue";
 
+import AppHeaderDesktop from "./components/AppHeaderDesktop.vue";
+import AppHeaderBottomCats from "./components/AppHeaderBottomCats.vue";
+
 export default {
   name: "App",
   components: {
     AppHeader,
     AppBottomNav,
     AppNavigationDrawer,
+
+    AppHeaderDesktop,
+    AppHeaderBottomCats,
   },
   data: () => ({
+    width: "",
     over: false,
   }),
+  computed: {
+    getSize() {
+      const screen = new ScreenSizeDetector();
+      return screen.width;
+    },
+    premession() {
+      const urls = ["checkout", "profile", "account"];
+      if (this.$router.currentRoute.path != "/account") {
+        return false;
+      } else {
+        return true;
+      }
+    },
+  },
   created() {
-    // const screen = new ScreenSizeDetector();
-    // if (screen.width > 500) {
-    //   this.over = true;
-    // }
+    // console.log(localStorage.getItem("token"));
   },
   mounted() {},
 };
 </script>
+
+<style lang="scss">
+@media screen and (min-width: 500px) {
+  @import "assets/styles.desktop.scss";
+}
+</style>

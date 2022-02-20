@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <swiper :options="options" v-if="getSize <= 500">
+  <div class="pc__cats">
+    <swiper :options="options">
       <swiper-slide
         v-for="(slide, index) in cats"
         :key="index"
@@ -12,32 +12,18 @@
         </div>
       </swiper-slide>
     </swiper>
-
-    <ProductsLoopMobile v-if="getSize <= 500" />
-    <ProductsLoopDesktop v-if="getSize > 500" />
   </div>
 </template>
 
-
-
 <script>
-import ScreenSizeDetector from "screen-size-detector";
-
-import { Icon } from "@iconify/vue2";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/swiper-bundle.min.css";
 
-import ProductsLoopMobile from "../components/Loop/ProductsLoopMobile.vue";
-import ProductsLoopDesktop from "../components/Loop/ProductsLoopDesktop.vue";
-
 export default {
-  name: "Home",
+  name: "AppHeaderBottomCats",
   components: {
     Swiper,
     SwiperSlide,
-    Icon,
-    ProductsLoopMobile,
-    ProductsLoopDesktop,
   },
   data: () => ({
     options: {
@@ -74,14 +60,8 @@ export default {
       },
     ],
   }),
-  created() {
-    this.$store.state.currentRoute = "Edaserov";
-  },
-  computed: {
-    getSize() {
-      const screen = new ScreenSizeDetector();
-      return screen.width;
-    },
-  },
 };
 </script>
+
+<style lang="scss" scoped>
+</style>

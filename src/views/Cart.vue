@@ -21,13 +21,18 @@
           class="item"
         >
           <div class="image">
-            <img :src="product.image" alt="" />
+            <img :src="$store.state.url + product.image" alt="" />
           </div>
 
           <div class="name">
             <span class="product_name">{{ product.name }}</span>
             <span class="weight">{{ product.weight }}гр.</span>
-            <span class="price">{{ product.price }} ₽</span>
+            <span class="price"
+              >{{ product.price }} ₽
+              <font v-if="Object.keys(product.select).length != 0"
+                >{{ product.select.name }} +{{ product.select.price }}₽</font
+              ></span
+            >
           </div>
           <div class="quantity">
             <div class="group">
@@ -56,7 +61,7 @@
                 color="primary"
                 depressed
                 class="plus"
-                @click="quantityPlus(product.id)"
+                @click="quantityPlus(product.stock, product.id)"
               >
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -107,16 +112,35 @@ export default {
   }),
   created() {
     this.$store.state.currentRoute = "Корзина";
+    this.$store.state.value = 1;
   },
   computed: {
     getSubtotal() {
-      let product = 0;
+      let total = 0;
+      let prices = [];
+      let select_prices = [];
       this.$store.state.cart.map((item) => {
-        let subtotal = item.quantity * item.price;
-        // console.log(sutotal);
-        product = product + subtotal;
+        prices.push(item.quantity * item.price);
+        if (Object.keys(item.select).length != 0) {
+          select_prices.push(item.quantity * parseInt(item.select.price));
+        }
       });
-      return product;
+
+      if (select_prices.length != 0) {
+        total =
+          prices.reduce(
+            (previousValue, currentValue) => previousValue + currentValue
+          ) +
+          select_prices.reduce(
+            (previousValue, currentValue) => previousValue + currentValue
+          );
+      } else {
+        total = prices.reduce(
+          (previousValue, currentValue) => previousValue + currentValue
+        );
+      }
+
+      return total;
     },
   },
   methods: {
@@ -130,11 +154,13 @@ export default {
       );
       return this.$store.state.cart[indexProductInCart].quantity;
     },
-    quantityPlus(id) {
+    quantityPlus(stock, id) {
       let indexProductInCart = this.$store.state.cart.findIndex(
         (x) => x.id === id
       );
-      this.$store.state.cart[indexProductInCart].quantity++;
+      if (this.$store.state.cart[indexProductInCart].quantity < stock) {
+        this.$store.state.cart[indexProductInCart].quantity++;
+      }
     },
 
     quantityMinus(id) {
@@ -153,6 +179,26 @@ export default {
 
     toCheckout() {
       this.$router.push("/checkout");
+    },
+
+    calc() {
+      let prices = [];
+      let select_prices = [];
+      let total = 0;
+      this.$store.state.cart.map((item) => {
+        prices.push(item.quantity * item.price);
+        if (Object.keys(item.select).length != 0) {
+          select_prices.push(item.quantity * parseInt(item.select.price));
+        }
+      });
+
+      total =
+        prices.reduce(
+          (previousValue, currentValue) => previousValue + currentValue
+        ) +
+        select_prices.reduce(
+          (previousValue, currentValue) => previousValue + currentValue
+        );
     },
 
     clearCart() {
@@ -238,6 +284,12 @@ li {
     font-family: "Roboto", sans-serif;
     font-weight: 700;
     font-size: 16px;
+
+    font {
+      font-size: 12px;
+      font-weight: 300;
+      border-bottom: 1px dashed;
+    }
   }
 
   .name {
