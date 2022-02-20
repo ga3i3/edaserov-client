@@ -8,7 +8,7 @@
           filled
           label="Номер телефона"
           :hide-details="true"
-          class="mb-5"
+          class="phone mb-5"
           v-model="form_auth.phone"
           v-mask="'(###) ### ## ##'"
         ></v-text-field>
@@ -196,9 +196,6 @@ export default {
   }),
   created() {
     this.$store.state.currentRoute = "Профиль";
-    if (localStorage.getItem("token") !== null) {
-      this.$router.push("/account");
-    }
   },
   watch: {},
   methods: {

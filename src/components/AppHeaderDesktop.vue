@@ -31,7 +31,9 @@
       <div class="actions">
         <ul>
           <li class="login">
-            <router-link :to="urlForAuth">{{ hasToken }}</router-link
+            <router-link
+              :to="$store.state.user.name != null ? '/account' : '/profile'"
+              >Личный кабинет</router-link
             ><Icon icon="bi:person-fill" />
           </li>
           <li class="cart">

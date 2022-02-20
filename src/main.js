@@ -6,6 +6,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
 import VueTheMask from 'vue-the-mask'
+import getUser from './plugins/user'
 
 import './assets/styles.scss'
 // import './assets/styles.desktop.scss'
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
 
 Vue.use(VueTheMask)
+Vue.use(getUser)
 
 new Vue({
 	router,

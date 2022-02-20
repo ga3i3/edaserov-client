@@ -1,20 +1,9 @@
 <template>
   <div class="home">
-    <swiper :options="options" v-if="getSize <= 500">
-      <swiper-slide
-        v-for="(slide, index) in cats"
-        :key="index"
-        :class="'cat-' + index"
-      >
-        <div class="cat">
-          <img :src="require('../res/' + slide.path)" />
-          <span>{{ slide.name }}</span>
-        </div>
-      </swiper-slide>
-    </swiper>
+    <CategoriesSlideMobile v-if="getSize <= 500" />
 
-    <ProductsLoopMobile v-if="getSize <= 500" />
     <ProductsLoopDesktop v-if="getSize > 500" />
+    <ProductsLoopMobile v-if="getSize <= 500" />
   </div>
 </template>
 
@@ -27,6 +16,9 @@ import { Icon } from "@iconify/vue2";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/swiper-bundle.min.css";
 
+import CategoriesSlideDesktop from "../components/Categories/CategoriesSlideDesktop.vue";
+import CategoriesSlideMobile from "../components/Categories/CategoriesSlideMobile.vue";
+
 import ProductsLoopMobile from "../components/Loop/ProductsLoopMobile.vue";
 import ProductsLoopDesktop from "../components/Loop/ProductsLoopDesktop.vue";
 
@@ -36,6 +28,8 @@ export default {
     Swiper,
     SwiperSlide,
     Icon,
+    CategoriesSlideDesktop,
+    CategoriesSlideMobile,
     ProductsLoopMobile,
     ProductsLoopDesktop,
   },
@@ -76,6 +70,7 @@ export default {
   }),
   created() {
     this.$store.state.currentRoute = "Edaserov";
+    this.$store.state.value = 0;
   },
   computed: {
     getSize() {

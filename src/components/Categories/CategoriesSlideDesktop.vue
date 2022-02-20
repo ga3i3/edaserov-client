@@ -7,7 +7,7 @@
         :class="'cat-' + index"
       >
         <div class="cat" @click="loadCatProducts(slide.slug)">
-          <img :src="require('../res/' + slide.path)" />
+          <img :src="require('../../res/' + slide.path)" />
           <span>{{ slide.name }}</span>
         </div>
       </swiper-slide>
@@ -20,7 +20,7 @@ import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/swiper-bundle.min.css";
 
 export default {
-  name: "AppHeaderBottomCats",
+  name: "CategoriesSlideDesktop",
   components: {
     Swiper,
     SwiperSlide,
@@ -29,7 +29,6 @@ export default {
     options: {
       slidesPerView: "auto",
       freeMode: true,
-      spaceBetween: 10,
       loop: false,
       centeredSlides: false,
       allowTouchMove: true,

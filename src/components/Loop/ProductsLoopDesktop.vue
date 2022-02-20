@@ -1,6 +1,7 @@
 <template>
   <div class="products_desktop">
-    <ul>
+    <h1>{{ getCategoryName($store.state.cat) }}</h1>
+    <ul v-if="$store.state.products.length != 0">
       <li v-for="(product, index) in $store.state.products" :key="index">
         <template
           v-if="product.visibility && product.stock != 0 && product.stock > 0"
@@ -9,8 +10,9 @@
             <v-img height="190" :src="$store.state.url + product.image"></v-img>
 
             <v-card-title class="d-flex justify-space-between align-center"
-              >{{ product.name }}
-              <span>{{ product.weight }}гр.</span></v-card-title
+              >{{ product.name }} <br /><span
+                >{{ product.weight }}гр.</span
+              ></v-card-title
             >
 
             <v-card-text>{{ product.description }}</v-card-text>
@@ -81,6 +83,13 @@
         </template>
       </li>
     </ul>
+    <v-alert
+      color="accent"
+      type="info"
+      class="mt-5"
+      v-if="$store.state.products.length == 0"
+      >На данный момент в этой категории нет блюд</v-alert
+    >
 
     <!-- <v-bottom-sheet v-model="select" inset :attach="true" :persistent="true">
       <v-sheet class="pa-5" height="250px">
@@ -207,6 +216,24 @@ export default {
 
       if (indexProductInCart > -1) {
         this.$store.state.cart[indexProductInCart].select = option;
+      }
+    },
+    getCategoryName(name) {
+      switch (name) {
+        case "hotter":
+          return "Горячее";
+        case "laych":
+          return "Бизнес ланч";
+        case "salads":
+          return "Салаты";
+        case "soups":
+          return "Супы";
+        case "desserts":
+          return "Десерты";
+        case "wok":
+          return "WOK";
+        default:
+          return "Все блюды";
       }
     },
   },

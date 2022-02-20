@@ -42,14 +42,6 @@
       >
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
-
-      <v-divider
-        vertical
-        v-if="$router.currentRoute.path == '/account'"
-      ></v-divider>
-      <v-btn icon v-if="$router.currentRoute.path == '/account'">
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
     </v-app-bar>
   </v-card>
 </template>
@@ -77,8 +69,9 @@ export default {
   methods: {
     goBack() {
       if (this.$router.currentRoute.path == "/checkout") {
-        this.$store.state.value = 0;
         this.$router.push("/cart");
+      } else if (this.$router.currentRoute.path == "/account/orders") {
+        this.$router.push("/account");
       } else {
         this.$store.state.value = 0;
         this.$router.push("/");

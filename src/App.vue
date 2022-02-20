@@ -2,14 +2,7 @@
   <v-app>
     <AppHeader v-if="getSize <= 500" />
     <AppHeaderDesktop v-if="getSize > 500" />
-    <AppHeaderBottomCats
-      v-if="
-        getSize > 500 &&
-        $router.currentRoute.path != '/account' &&
-        $router.currentRoute.path != '/profile' &&
-        $router.currentRoute.path != '/checkout'
-      "
-    />
+    <CategoriesSlideDesktop v-if="premession" />
     <v-main :class="'main_layout ' + $router.currentRoute.name" v-if="!over">
       <router-view />
     </v-main>
@@ -26,7 +19,7 @@ import AppBottomNav from "./components/AppBottomNav.vue";
 import AppNavigationDrawer from "./components/AppNavigationDrawer.vue";
 
 import AppHeaderDesktop from "./components/AppHeaderDesktop.vue";
-import AppHeaderBottomCats from "./components/AppHeaderBottomCats.vue";
+import CategoriesSlideDesktop from "./components/Categories/CategoriesSlideDesktop.vue";
 
 export default {
   name: "App",
@@ -36,7 +29,7 @@ export default {
     AppNavigationDrawer,
 
     AppHeaderDesktop,
-    AppHeaderBottomCats,
+    CategoriesSlideDesktop,
   },
   data: () => ({
     width: "",
@@ -48,16 +41,27 @@ export default {
       return screen.width;
     },
     premession() {
-      const urls = ["checkout", "profile", "account"];
-      if (this.$router.currentRoute.path != "/account") {
-        return false;
-      } else {
+      const screen = new ScreenSizeDetector().width;
+
+      const urls = ["Home", "Cart"];
+      const current = this.$router.currentRoute.path;
+      if (
+        screen > 500 &&
+        urls.find((element) =>
+          element.includes(this.$route.name) ? true : false
+        )
+      ) {
         return true;
+      } else {
+        return false;
       }
     },
   },
+  methods: {},
   created() {
-    // console.log(localStorage.getItem("token"));
+    setTimeout(() => {
+      console.log(this.$route.name);
+    }, 2000);
   },
   mounted() {},
 };

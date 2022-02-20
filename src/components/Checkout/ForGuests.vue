@@ -166,6 +166,7 @@
                 <del
                   ><b>{{ total }} ₽</b></del
                 >
+                <span class="minus-pecent">-{{ this.form.percent }}%</span>
               </li>
               <li v-if="form.percent">
                 Со скидкой:
@@ -447,6 +448,11 @@ p {
 
   b {
     font-family: "Roboto", sans-serif;
+  }
+
+  .minus-pecent {
+    font-family: "Roboto", sans-serif;
+    padding-left: 15px;
   }
 }
 

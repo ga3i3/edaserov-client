@@ -1,44 +1,46 @@
 <template>
-  <div class="account_menu" v-if="$store.state.user.phone != null">
-    <div class="user">
-      <img src="../../res/user-image.png" alt="" />
-      <div class="inf">
-        <div class="phone">{{ phoneFormat($store.state.user.phone) }}</div>
-        <div class="name">{{ $store.state.user.name }}</div>
+  <div class="account default">
+    <div class="account_menu" v-if="$store.state.user.phone != null">
+      <div class="user">
+        <img src="../../res/user-image.png" alt="" />
+        <div class="inf">
+          <div class="phone">{{ phoneFormat($store.state.user.phone) }}</div>
+          <div class="name">{{ $store.state.user.name }}</div>
+        </div>
+        <div class="logout">
+          <v-btn depressed @click="logout"> Выйти </v-btn>
+        </div>
       </div>
-      <div class="logout">
-        <v-btn depressed @click="logout"> Выйти </v-btn>
-      </div>
+      <ul>
+        <li class="fund">
+          <div class="line">
+            <span class="label">Накопительная скидка</span
+            ><span class="value">{{
+              $store.state.user.fund == 0
+                ? "0%"
+                : calcFund($store.state.user.fund)
+            }}</span>
+          </div>
+          <div class="description">
+            <router-link to="/blog/nokopitelnaya-skidka">Подробнее</router-link>
+          </div>
+        </li>
+        <li class="orders" @click="$router.push('/account/orders')">
+          <div class="line">
+            <span class="label">Все заказы</span
+            ><span class="value"><Icon icon="bi:arrow-right" /></span>
+          </div>
+          <div class="description">Всего {{ getOrdersCount }}</div>
+        </li>
+        <li class="edit" v-show="false">
+          <div class="line">
+            <span class="label">Настройки</span
+            ><span class="value"><Icon icon="bi:arrow-right" /></span>
+          </div>
+          <div class="description">Редактировать профиль</div>
+        </li>
+      </ul>
     </div>
-    <ul>
-      <li class="fund">
-        <div class="line">
-          <span class="label">Накопительная скидка</span
-          ><span class="value">{{
-            $store.state.user.fund == 0
-              ? "0%"
-              : calcFund($store.state.user.fund)
-          }}</span>
-        </div>
-        <div class="description">
-          <router-link to="/blog/nokopitelnaya-skidka">Подробнее</router-link>
-        </div>
-      </li>
-      <li class="orders" @click="$router.push('/account/orders')">
-        <div class="line">
-          <span class="label">Все заказы</span
-          ><span class="value"><Icon icon="bi:arrow-right" /></span>
-        </div>
-        <div class="description">Всего {{ getOrdersCount }}</div>
-      </li>
-      <li class="edit" v-show="false">
-        <div class="line">
-          <span class="label">Настройки</span
-          ><span class="value"><Icon icon="bi:arrow-right" /></span>
-        </div>
-        <div class="description">Редактировать профиль</div>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -47,12 +49,15 @@ import { Icon } from "@iconify/vue2";
 import phoneFormatter from "phone-formatter";
 
 export default {
-  name: "MobileLayout",
+  name: "Main",
   components: {
     Icon,
   },
   data: () => ({}),
-  async created() {},
+  async created() {
+    this.$store.state.currentRoute = "Личный кабинет";
+    this.$store.state.value = 2;
+  },
   computed: {
     getOrdersCount() {
       let count = this.$store.state.user.orders.length;

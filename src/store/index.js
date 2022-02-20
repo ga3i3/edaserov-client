@@ -7,6 +7,7 @@ export default new Vuex.Store({
 	state: {
 		url: process.env.VUE_APP_MAIN_URL + "/uploads/",
 		cart: [],
+		cat: 'Все блюды',
 		// products: [
 		// 	{
 		// 		id: 1,
