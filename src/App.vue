@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :class="workTime ? 'working' : 'closed'">
     <AppHeader v-if="getSize <= 500" />
     <AppHeaderDesktop v-if="getSize > 500" />
     <CategoriesSlideDesktop v-if="premession" />
@@ -8,6 +8,39 @@
     </v-main>
     <AppBottomNav v-if="getSize < 500" />
     <AppNavigationDrawer v-if="getSize < 500" />
+
+    <v-dialog v-model="modal" persistent max-width="490">
+      <div class="wrap store_closed">
+        <img src="./res/sad.png" alt="" />
+        <strong>Время заказа бизнес-ланчей истекло!</strong>
+        <p>
+          Предложение действует <br />
+          с
+          {{
+            Object.keys($store.state.params).length != 0
+              ? $store.state.params.working_time[0] +
+                ":00" +
+                " до " +
+                $store.state.params.working_time[1] +
+                ":00"
+              : ""
+          }}
+          в будние дни.
+        </p>
+        <v-btn text @click="modal = false">Закрыть</v-btn>
+      </div>
+    </v-dialog>
+
+    <v-dialog v-model="closed" persistent max-width="490">
+      <div class="wrap store_closed">
+        <img src="./res/close.png" alt="" />
+        <strong>Не принимаем заказы!</strong>
+        <p>На данный момент мы не принимаем заказы, вернитесь чуть позже</p>
+        <v-btn text @click="closed = false">Закрыть</v-btn>
+      </div>
+    </v-dialog>
+
+    <div :class="workTime ? 'work' : 'close'"></div>
   </v-app>
 </template>
 
@@ -34,7 +67,33 @@ export default {
   data: () => ({
     width: "",
     over: false,
+    access: false,
+    modal: false,
+    closed: false,
   }),
+  beforeCreate() {
+    this.$store.commit("params");
+  },
+  beforeMount() {
+    // const date = new Date();
+    // if (Object.keys(this.$store.state.params).length != 0) {
+    //   // setTimeout(() => {
+    //   if (
+    //     date.getDay() > 0 &&
+    //     date.getDay() < 6 &&
+    //     date.getHours() >= parseInt(this.$store.state.params.working_time[0]) &&
+    //     date.getHours() <= parseInt(this.$store.state.params.working_time[1])
+    //   ) {
+    //     this.access = true;
+    //   } else {
+    //     this.modal = true;
+    //   }
+    //   // }, 1000);
+    // }
+    // setTimeout(() => {
+    // console.log(this.$store.state.params.working_time);
+    // }, 2500);
+  },
   computed: {
     getSize() {
       const screen = new ScreenSizeDetector();
@@ -56,13 +115,36 @@ export default {
         return false;
       }
     },
+    workTime() {
+      const date = new Date();
+
+      if (Object.keys(this.$store.state.params).length != 0) {
+        if (this.$store.state.params.working == true) {
+          if (
+            date.getDay() > 0 &&
+            date.getDay() < 6 &&
+            date.getHours() >=
+              parseInt(this.$store.state.params.working_time[0]) &&
+            date.getHours() <=
+              parseInt(this.$store.state.params.working_time[1])
+          ) {
+            this.access = true;
+            return true;
+          } else {
+            this.modal = true;
+            return false;
+          }
+        } else {
+          this.closed = true;
+          return false;
+        }
+
+        // }, 1000);
+      }
+    },
   },
   methods: {},
-  created() {
-    setTimeout(() => {
-      console.log(this.$route.name);
-    }, 2000);
-  },
+
   mounted() {},
 };
 </script>
@@ -70,5 +152,25 @@ export default {
 <style lang="scss">
 @media screen and (min-width: 500px) {
   @import "assets/styles.desktop.scss";
+}
+
+.store_closed {
+  background-color: #fff;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  img {
+    max-width: 150px;
+    margin-bottom: 25px;
+  }
+
+  strong {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 }
 </style>

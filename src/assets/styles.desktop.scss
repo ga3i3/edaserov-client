@@ -155,6 +155,10 @@ main.v-main, .v-main.Profile {
 
 /* LOOP */
 .products_desktop {
+	ul {
+		flex-wrap: wrap;
+	}
+
 	.v-label {
     display: inline !important;
 

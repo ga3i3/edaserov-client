@@ -110,6 +110,11 @@ export default {
   data: () => ({
     total: 0,
   }),
+  beforeCreate() {
+    if (localStorage.getItem("token") == null) {
+      this.$router.push("/profile");
+    }
+  },
   created() {
     this.$store.state.currentRoute = "Корзина";
     this.$store.state.value = 1;

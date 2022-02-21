@@ -1,5 +1,5 @@
 <template>
-  <div class="products">
+  <div class="products products_loop">
     <h1>{{ getCategoryName($store.state.cat) }}</h1>
 
     <ul v-if="$store.state.products.length != 0">

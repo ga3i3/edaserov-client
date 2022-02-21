@@ -10,6 +10,7 @@
     "akar-icons": "^1.9.6",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.7",
     "i": "^0.3.7",
     "phone-formatter": "0.0.2",
     "register-service-worker": "^1.7.1",

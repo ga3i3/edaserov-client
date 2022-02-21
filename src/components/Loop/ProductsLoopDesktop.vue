@@ -1,5 +1,5 @@
 <template>
-  <div class="products_desktop">
+  <div class="products_desktop products_loop">
     <h1>{{ getCategoryName($store.state.cat) }}</h1>
     <ul v-if="$store.state.products.length != 0">
       <li v-for="(product, index) in $store.state.products" :key="index">

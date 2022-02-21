@@ -42,10 +42,15 @@
           >
         </div>
         <div class="line">
-          <v-radio label="На дом" value="tohome"></v-radio>
+          <v-radio
+            label="На дом"
+            value="tohome"
+            :disabled="!getWorkDelivery"
+          ></v-radio>
           <span
-            >Работаем с 12:00 до 16:00 <br />Заказ доставим не
-            замедлительно</span
+            >Работаем с
+            {{ delivery_work[0] + ":00 до " + delivery_work[1] + ":00" }}
+            <br />Заказ доставим не замедлительно</span
           >
         </div>
       </v-radio-group>
@@ -271,6 +276,8 @@ export default {
     total: null,
     rules: false,
     privacy: false,
+
+    delivery_work: [],
   }),
   created() {
     if (this.$store.state.cart.length == 0) {
@@ -280,6 +287,8 @@ export default {
     this.getSubtotal();
     this.checkCalcFundAndTotal();
     this.onLoad();
+
+    this.delivery_work = this.$store.state.params.delivery.working_time;
   },
   watch: {
     discountChange(val) {
@@ -290,7 +299,22 @@ export default {
       }
     },
   },
-  computed: {},
+  computed: {
+    getWorkDelivery() {
+      const date = new Date();
+
+      if (
+        date.getHours() >=
+          parseInt(this.$store.state.params.delivery.working_time[0]) &&
+        date.getHours() <=
+          parseInt(this.$store.state.params.delivery.working_time[1])
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   methods: {
     onLoad() {
       this.form.phone = this.$store.state.user.phone;
