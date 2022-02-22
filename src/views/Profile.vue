@@ -10,7 +10,7 @@
           :hide-details="true"
           class="phone mb-5"
           v-model="form_auth.phone"
-          v-mask="'(###) ### ## ##'"
+          v-mask="'+7 (###) ### ## ##'"
         ></v-text-field>
         <v-text-field
           filled
@@ -61,7 +61,7 @@
           :hide-details="true"
           class="mb-5"
           prepend-inner-icon="mdi-phone"
-          v-mask="'(###) ### ## ##'"
+          v-mask="'+7 (###) ### ## ##'"
         ></v-text-field>
         <v-text-field
           v-model="form_reg.email"

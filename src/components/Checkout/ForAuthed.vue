@@ -15,7 +15,7 @@
         :hide-details="true"
         class="phone mb-3"
         v-model="form.phone"
-        v-mask="'(###) ### ## ##'"
+        v-mask="'+7 (###) ### ## ##'"
       ></v-text-field>
       <v-text-field
         filled
@@ -182,6 +182,9 @@
             </div>
 
             <div class="prices">
+              <li v-if="delivery_price != 0 && form.delivery == 'tohome'">
+                Доставка: <b>{{ delivery_price }} ₽</b>
+              </li>
               <li v-if="!form.percent">
                 Общая сумма заказа: <b>{{ total }} ₽</b>
               </li>
@@ -194,9 +197,14 @@
               </li>
               <li v-if="form.percent">
                 Со скидкой:
-                <ins
-                  ><b>{{ form.discount }} ₽</b></ins
-                >
+                <b>{{ form.discount }} ₽</b>
+              </li>
+              <li v-if="delivery_price != 0 && form.delivery == 'tohome'">
+                Итого:
+                <b>{{
+                  parseInt(delivery_price) +
+                  (form.discount ? form.discount : total)
+                }}</b>
               </li>
             </div>
             <v-btn block large color="accent" @click="confirmOrder"
@@ -272,12 +280,13 @@ export default {
       status: false,
     },
     modal_time: false,
-    place_order: false,
+    place_order: true,
     total: null,
     rules: false,
     privacy: false,
 
     delivery_work: [],
+    delivery_price: "",
   }),
   created() {
     if (this.$store.state.cart.length == 0) {
@@ -359,6 +368,13 @@ export default {
           (previousValue, currentValue) => previousValue + currentValue
         );
       }
+
+      if (total < this.$store.state.params.delivery.freeupto) {
+        this.delivery_price = this.$store.state.params.delivery.default;
+      } else if (total >= this.$store.state.params.delivery.freeupto) {
+        this.delivery_price = 0;
+      }
+
       this.total = total;
     },
 
@@ -470,6 +486,7 @@ export default {
         user: this.$store.state.user.id,
         discount: this.form.discount,
         percent: this.form.percent,
+        delivery_price: parseInt(this.delivery_price),
       };
 
       if (
