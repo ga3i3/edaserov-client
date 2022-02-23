@@ -1,7 +1,15 @@
 <template>
   <div class="products_desktop products_loop">
-    <h1>{{ getCategoryName($store.state.cat) }}</h1>
-    <ul v-if="$store.state.products.length != 0">
+    <h1>{{ $store.state.category.name }}</h1>
+    <v-alert color="accent" type="info" class="mt-5" v-if="!statusOfCat"
+      >Для категории "{{ getCategoryName($store.state.cat) }}" предложении
+      действует {{ $store.state.category.working[0] + ":00" }} до
+      {{ $store.state.category.working[1] + ":00" }}
+    </v-alert>
+    <ul
+      v-if="$store.state.products.length != 0"
+      :class="statusOfCat ? 'working' : 'closed'"
+    >
       <li v-for="(product, index) in $store.state.products" :key="index">
         <template
           v-if="product.visibility && product.stock != 0 && product.stock > 0"
@@ -17,7 +25,10 @@
 
             <v-card-text>{{ product.description }}</v-card-text>
 
-            <v-divider class="mx-4"></v-divider>
+            <v-divider
+              class="mx-4"
+              v-show="product.options.length != 0"
+            ></v-divider>
 
             <div class="options" v-if="product.options.length != 0">
               <v-radio-group>
@@ -90,21 +101,6 @@
       v-if="$store.state.products.length == 0"
       >На данный момент в этой категории нет блюд</v-alert
     >
-
-    <!-- <v-bottom-sheet v-model="select" inset :attach="true" :persistent="true">
-      <v-sheet class="pa-5" height="250px">
-        <h3 class="text-lg-h6 text-left">Выберите опцию</h3>
-        <v-radio-group>
-          <v-radio
-            v-for="(option, index) in productOptions"
-            :key="index"
-            :label="option.name + ' +' + option.price + 'руб.'"
-            :value="option"
-            @change="changeSelect(option)"
-          ></v-radio>
-        </v-radio-group>
-      </v-sheet>
-    </v-bottom-sheet> -->
   </div>
 </template>
 
@@ -126,7 +122,22 @@ export default {
     // console.log(this.$store.state.cart);
     await this.getAll();
   },
-  computed: {},
+  beforeMount() {},
+  computed: {
+    statusOfCat() {
+      const date = new Date();
+      const currentCat = this.$store.state.category;
+
+      if (
+        date.getHours() >= parseInt(currentCat.working[0]) &&
+        date.getHours() <= parseInt(currentCat.working[1])
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   watch: {
     select(val) {
       if (!val) {
@@ -137,14 +148,22 @@ export default {
   },
   methods: {
     getAll() {
-      this.$axios.get(`${process.env.VUE_APP_MAIN_URL}/product`).then(
-        (res) => {
-          this.$store.state.products = res.data.doc;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      this.$axios
+        .get(`${process.env.VUE_APP_MAIN_URL}/product/cat`, {
+          headers: {
+            cat: "laych",
+          },
+        })
+        .then(
+          (res) => {
+            this.$store.state.cat = "laych";
+            this.$store.state.products = res.data.doc;
+            this.$store.commit("categoryAndCheckWork");
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
     },
     addToCart(product) {
       this.$store.state.quantityToggle.push(product._id);
@@ -250,7 +269,26 @@ ul {
   > li {
     width: calc(33% - 15px);
     margin-right: 15px;
-    align-self: baseline;
+    align-self: stretch;
+
+    > * {
+      height: calc(100% - 24px);
+      display: flex;
+      flex-direction: column;
+
+      .v-image {
+        height: 190px;
+        flex: unset !important;
+      }
+
+      .v-card__text {
+        margin-bottom: auto;
+      }
+
+      hr:last-child {
+        margin-top: auto;
+      }
+    }
 
     &:nth-child(3n) {
       margin-right: 0;

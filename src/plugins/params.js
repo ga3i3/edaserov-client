@@ -7,7 +7,10 @@ const loadParams = {
 		Vue.mixin({
 			async beforeCreated() {
 				await axios.get(`${process.env.VUE_APP_MAIN_URL}/params`).then(res => {
-					if (res.status == 200) store.state.params = res.data.doc;
+					console.log(res.data)
+					if (res.status == 200) {
+						store.state.params = res.data.params
+					}
 				}, err => {
 					console.log(err);
 				})

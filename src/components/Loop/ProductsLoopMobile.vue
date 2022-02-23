@@ -1,8 +1,17 @@
 <template>
   <div class="products products_loop">
-    <h1>{{ getCategoryName($store.state.cat) }}</h1>
+    <h1>{{ $store.state.category.name }}</h1>
 
-    <ul v-if="$store.state.products.length != 0">
+    <v-alert color="accent" type="info" class="mt-5" v-if="!statusOfCat"
+      >Для категории "{{ getCategoryName($store.state.cat) }}" предложении
+      действует {{ $store.state.category.working[0] + ":00" }} до
+      {{ $store.state.category.working[1] + ":00" }}
+    </v-alert>
+
+    <ul
+      v-if="$store.state.products.length != 0"
+      :class="statusOfCat ? 'working' : 'closed'"
+    >
       <li v-for="(product, index) in $store.state.products" :key="index">
         <template
           v-if="product.visibility && product.stock != 0 && product.stock > 0"
@@ -107,7 +116,24 @@ export default {
     // console.log(this.$store.state.cart);
     await this.getAll();
   },
-  computed: {},
+  computed: {
+    statusOfCat() {
+      const date = new Date();
+
+      if (this.$store.state.category) {
+        const currentCat = this.$store.state.category;
+
+        if (
+          date.getHours() >= parseInt(currentCat.working[0]) &&
+          date.getHours() <= parseInt(currentCat.working[1])
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+  },
   watch: {
     select(val) {
       if (!val) {
@@ -118,14 +144,22 @@ export default {
   },
   methods: {
     getAll() {
-      this.$axios.get(`${process.env.VUE_APP_MAIN_URL}/product`).then(
-        (res) => {
-          this.$store.state.products = res.data.doc;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+      this.$axios
+        .get(`${process.env.VUE_APP_MAIN_URL}/product/cat`, {
+          headers: {
+            cat: "laych",
+          },
+        })
+        .then(
+          (res) => {
+            this.$store.state.cat = "laych";
+            this.$store.state.products = res.data.doc;
+            this.$store.commit("categoryAndCheckWork");
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
     },
     addToCart(product) {
       this.$store.state.quantityToggle.push(product._id);

@@ -221,6 +221,11 @@ img {
 	}
 }
 
+.products_loop ul.closed {
+	pointer-events: none !important;
+	opacity: 0.7;
+}
+
 .v-sheet {
 	border-top-left-radius: 30px;
 	border-top-right-radius: 30px;

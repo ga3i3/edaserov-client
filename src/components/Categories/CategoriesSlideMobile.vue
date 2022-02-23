@@ -82,6 +82,7 @@ export default {
           (res) => {
             this.$store.state.cat = slug;
             this.$store.state.products = res.data.doc;
+            this.$store.commit("categoryAndCheckWork");
           },
           (err) => {
             console.log(err);
