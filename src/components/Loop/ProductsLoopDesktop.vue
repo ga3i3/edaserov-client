@@ -2,7 +2,7 @@
   <div class="products_desktop products_loop">
     <h1>{{ $store.state.category.name }}</h1>
     <v-alert color="accent" type="info" class="mt-5" v-if="!statusOfCat"
-      >Для категории "{{ getCategoryName($store.state.cat) }}" предложении
+      >Для категории "{{ getCategoryName($store.state.cat) }}" предложение
       действует {{ $store.state.category.working[0] + ":00" }} до
       {{ $store.state.category.working[1] + ":00" }}
     </v-alert>
@@ -11,87 +11,83 @@
       :class="statusOfCat ? 'working' : 'closed'"
     >
       <li v-for="(product, index) in $store.state.products" :key="index">
-        <template
-          v-if="product.visibility && product.stock != 0 && product.stock > 0"
-        >
-          <v-card class="mx-auto my-6" elevation="1">
-            <v-img height="190" :src="$store.state.url + product.image"></v-img>
+        <v-card class="mx-auto my-6" elevation="0">
+          <v-img height="190" :src="$store.state.url + product.image"></v-img>
 
-            <v-card-title class="d-flex justify-space-between align-center"
-              >{{ product.name }} <br /><span
-                >{{ product.weight }}гр.</span
-              ></v-card-title
-            >
+          <v-card-title class="d-flex justify-space-between align-center"
+            >{{ product.name }} <br /><span
+              >{{ product.weight }}гр.</span
+            ></v-card-title
+          >
 
-            <v-card-text>{{ product.description }}</v-card-text>
+          <v-card-text>{{ product.description }}</v-card-text>
 
-            <v-divider
-              class="mx-4"
-              v-show="product.options.length != 0"
-            ></v-divider>
+          <v-divider
+            class="mx-4"
+            v-show="product.options.length != 0"
+          ></v-divider>
 
-            <div class="options" v-if="product.options.length != 0">
-              <v-radio-group>
-                <v-radio
-                  v-for="(option, index) in product.options"
-                  :key="index"
-                  :value="option"
-                  @change="changeOption(product._id, option)"
-                >
-                  <template #label>
-                    {{ option.name }} <span>+{{ option.price }} ₽</span>
-                  </template>
-                </v-radio>
-              </v-radio-group>
-            </div>
-
-            <v-divider class="mx-4"></v-divider>
-
-            <v-card-actions class="d-flex justify-space-between align-center">
-              <div class="price">{{ product.price + " ₽" }}</div>
-              <div
-                v-if="$store.state.quantityToggle.includes(product._id)"
-                class="quantity"
+          <div class="options" v-if="product.options.length != 0">
+            <v-radio-group>
+              <v-radio
+                v-for="(option, index) in product.options"
+                :key="index"
+                :value="option"
+                @change="changeOption(product._id, option)"
               >
-                <v-btn
-                  small
-                  color="primary"
-                  depressed
-                  class="minus"
-                  @click="quantityMinus(product._id)"
-                >
-                  <v-icon>{{
-                    currentProductQuantity(product._id) == 1
-                      ? "mdi-delete"
-                      : "mdi-minus"
-                  }}</v-icon>
-                </v-btn>
+                <template #label>
+                  {{ option.name }} <span>+{{ option.price }} ₽</span>
+                </template>
+              </v-radio>
+            </v-radio-group>
+          </div>
 
-                <v-btn small depressed>
-                  {{ currentProductQuantity(product._id) }}
-                </v-btn>
+          <v-divider class="mx-4"></v-divider>
 
-                <v-btn
-                  small
-                  color="primary"
-                  depressed
-                  class="plus"
-                  @click="quantityPlus(product.stock, product._id)"
-                >
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </div>
+          <v-card-actions class="d-flex justify-space-between align-center">
+            <div class="price">{{ product.price + " ₽" }}</div>
+            <div
+              v-if="$store.state.quantityToggle.includes(product._id)"
+              class="quantity"
+            >
               <v-btn
+                small
                 color="primary"
                 depressed
-                v-if="!$store.state.quantityToggle.includes(product._id)"
-                @click="addToCart(product)"
+                class="minus"
+                @click="quantityMinus(product._id)"
               >
-                В корзину
+                <v-icon>{{
+                  currentProductQuantity(product._id) == 1
+                    ? "mdi-delete"
+                    : "mdi-minus"
+                }}</v-icon>
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
+
+              <v-btn small depressed>
+                {{ currentProductQuantity(product._id) }}
+              </v-btn>
+
+              <v-btn
+                small
+                color="primary"
+                depressed
+                class="plus"
+                @click="quantityPlus(product.stock, product._id)"
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </div>
+            <v-btn
+              color="primary"
+              depressed
+              v-if="!$store.state.quantityToggle.includes(product._id)"
+              @click="addToCart(product)"
+            >
+              В корзину
+            </v-btn>
+          </v-card-actions>
+        </v-card>
       </li>
     </ul>
     <v-alert

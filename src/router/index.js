@@ -13,6 +13,11 @@ const routes = [
 		component: () => import('../views/Home.vue'),
 	},
 	{
+		path: '/page/:id',
+		name: 'Page',
+		component: () => import('../views/Page.vue'),
+	},
+	{
 		path: '/cart',
 		name: 'Cart',
 		component: () => import('../views/Cart.vue'),
@@ -55,6 +60,11 @@ const routes = [
 			title: 'Оформление заказа',
 			requiresAuth: true
 		}
+	},
+	{
+		path: '/search/',
+		name: 'Search',
+		component: () => import('../views/Search.vue'),
 	},
 	{
 		path: '/success/:id',

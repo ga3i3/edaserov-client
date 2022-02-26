@@ -243,7 +243,7 @@ export default {
         password: this.form_auth.password,
       };
 
-      if (data.phone.length == 15 && data.password.length != 0) {
+      if (data.phone.length == 18 && data.password.length != 0) {
         this.$axios
           .post(`${process.env.VUE_APP_MAIN_URL}/user/login`, data)
           .then((res) => {

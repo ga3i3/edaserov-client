@@ -1,5 +1,6 @@
 <template>
   <v-app :class="workTime ? 'working' : 'closed'">
+    <Alert />
     <AppHeader v-if="getSize <= 500" />
     <AppHeaderDesktop v-if="getSize > 500" />
     <CategoriesSlideDesktop v-if="premession" />
@@ -12,7 +13,7 @@
     <v-dialog v-model="modal" persistent max-width="490">
       <div class="wrap store_closed">
         <img src="./res/sad.png" alt="" />
-        <strong>Время заказа бизнес-ланчей истекло!</strong>
+        <strong>Время заказа истекло!</strong>
         <p>
           Предложение действует <br />
           с
@@ -47,6 +48,7 @@
 <script>
 import ScreenSizeDetector from "screen-size-detector";
 
+import Alert from "./components/Alert.vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppBottomNav from "./components/AppBottomNav.vue";
 import AppNavigationDrawer from "./components/AppNavigationDrawer.vue";
@@ -57,6 +59,7 @@ import CategoriesSlideDesktop from "./components/Categories/CategoriesSlideDeskt
 export default {
   name: "App",
   components: {
+    Alert,
     AppHeader,
     AppBottomNav,
     AppNavigationDrawer,

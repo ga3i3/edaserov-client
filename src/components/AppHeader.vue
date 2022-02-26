@@ -1,7 +1,7 @@
 <template>
   <v-card
-    class="overflow-hidden"
-    v-show="$router.currentRoute.path != '/profile'"
+    class="overflow-hidden app_header"
+    v-show="$router.currentRoute.path != '/profile' && hideHeader"
   >
     <v-app-bar fixed color="white" elevate-on-scroll class="app_header">
       <v-btn
@@ -51,6 +51,16 @@ export default {
   name: "AppHeader",
   created() {},
   computed: {
+    hideHeader() {
+      if (
+        window.location.href.includes("page") ||
+        this.$router.currentRoute.path.includes("page")
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     // getCurrentRouter() {
     //   if (this.$router.currentRoute.path == "/") {
     //     return "Edaserov";

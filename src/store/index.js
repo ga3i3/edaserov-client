@@ -18,7 +18,8 @@ export default new Vuex.Store({
 		user: {},
 		params: {},
 		categories: {},
-		category: {}
+		category: {},
+		pages: []
 	},
 	mutations: {
 		params(state) {
@@ -26,6 +27,7 @@ export default new Vuex.Store({
 				if (res.status == 200) {
 					state.params = res.data.params
 					state.categories = res.data.categories
+					state.pages = res.data.pages
 				}
 			}, err => {
 				console.log(err);

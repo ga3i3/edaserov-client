@@ -5,64 +5,14 @@
     temporary
     :right="true"
   >
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-information</v-icon>
-      </v-list-item-icon>
-
+    <v-list-item
+      :link="true"
+      v-for="(page, index) in $store.state.pages"
+      :key="index"
+      :to="'/page/' + page.slug"
+    >
       <v-list-item-content>
-        <v-list-item-title>Оплата и доставка</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-help</v-icon>
-      </v-list-item-icon>
-
-      <v-list-item-content>
-        <v-list-item-title>Вопросы и ответы</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-headset</v-icon>
-      </v-list-item-icon>
-
-      <v-list-item-content>
-        <v-list-item-title>Связь с администрацией</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-pencil</v-icon>
-      </v-list-item-icon>
-
-      <v-list-item-content>
-        <v-list-item-title>Контакты</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-divider class="mt-5 mb-5"></v-divider>
-
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-file-document</v-icon>
-      </v-list-item-icon>
-
-      <v-list-item-content>
-        <v-list-item-title>Политика конфиденциальности</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-list-item :link="true">
-      <v-list-item-icon>
-        <v-icon>mdi-file-document</v-icon>
-      </v-list-item-icon>
-      <v-list-item-content>
-        <v-list-item-title>Правилы сайта</v-list-item-title>
+        <v-list-item-title>{{ page.name }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
 
@@ -73,7 +23,10 @@
         <v-icon>mdi-clock</v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title>Работаем с 8:00 до 16:00</v-list-item-title>
+        <v-list-item-title
+          >Работаем с {{ $store.state.params.working_time[0] }}:00 до
+          {{ $store.state.params.working_time[1] }}:00</v-list-item-title
+        >
       </v-list-item-content>
     </v-list-item>
     <v-list-item dense>

@@ -43,15 +43,14 @@
         </div>
         <div class="line">
           <v-radio
-            label="На дом"
+            label="Доставка"
             value="tohome"
             :disabled="!getWorkDelivery"
           ></v-radio>
           <span
             >Работаем с
             {{ delivery_work[0] + ":00 до " + delivery_work[1] + ":00" }}
-            <br />Заказ доставим не замедлительно</span
-          >
+          </span>
         </div>
       </v-radio-group>
     </div>
@@ -143,18 +142,21 @@
                 label="Улица"
                 :hide-details="true"
                 class="street"
+                v-model="form.address.street"
               ></v-text-field>
               <v-text-field
                 filled
                 label="Дом"
                 :hide-details="true"
                 class="house"
+                v-model="form.address.house"
               ></v-text-field>
               <v-text-field
                 filled
                 label="Квартира"
                 :hide-details="true"
                 class="apartment"
+                v-model="form.address.apartment"
               ></v-text-field>
             </div>
           </div>
@@ -182,9 +184,6 @@
             </div>
 
             <div class="prices">
-              <li v-if="delivery_price != 0 && form.delivery == 'tohome'">
-                Доставка: <b>{{ delivery_price }} ₽</b>
-              </li>
               <li v-if="!form.percent">
                 Общая сумма заказа: <b>{{ total }} ₽</b>
               </li>
@@ -198,6 +197,9 @@
               <li v-if="form.percent">
                 Со скидкой:
                 <b>{{ form.discount }} ₽</b>
+              </li>
+              <li v-if="delivery_price != 0 && form.delivery == 'tohome'">
+                Доставка: <b>{{ delivery_price }} ₽</b>
               </li>
               <li v-if="delivery_price != 0 && form.delivery == 'tohome'">
                 Итого:
@@ -280,13 +282,13 @@ export default {
       status: false,
     },
     modal_time: false,
-    place_order: true,
+    place_order: false,
     total: null,
     rules: false,
     privacy: false,
 
     delivery_work: [],
-    delivery_price: "",
+    delivery_price: 0,
   }),
   created() {
     if (this.$store.state.cart.length == 0) {
@@ -342,6 +344,17 @@ export default {
         this.snackbar.text = "Заполните все поля";
       } else {
         this.place_order = true;
+
+        let total = this.total;
+        if (this.form.delivery == "tohome") {
+          if (total < this.$store.state.params.delivery.freeupto) {
+            this.delivery_price = this.$store.state.params.delivery.default;
+          } else if (total >= this.$store.state.params.delivery.freeupto) {
+            this.delivery_price = 0;
+          }
+        } else {
+          this.delivery_price = 0;
+        }
       }
     },
     getSubtotal() {
@@ -369,13 +382,18 @@ export default {
         );
       }
 
-      if (total < this.$store.state.params.delivery.freeupto) {
-        this.delivery_price = this.$store.state.params.delivery.default;
-      } else if (total >= this.$store.state.params.delivery.freeupto) {
-        this.delivery_price = 0;
+      let bread = this.$store.state.cart.find((x) => x.id == "bread_extra");
+      let drink = this.$store.state.cart.find((x) => x.id == "drink_extra");
+
+      if (bread != undefined && drink != undefined) {
+        total -= 23;
+      } else if (bread != undefined && drink == undefined) {
+        total -= 3;
+      } else if (drink != undefined && bread == undefined) {
+        total -= 20;
       }
 
-      this.total = total;
+      this.total = total.toFixed(2);
     },
 
     calcFromAmount() {
@@ -484,6 +502,7 @@ export default {
         time: this.form.time,
         cart: this.$store.state.cart,
         user: this.$store.state.user.id,
+        total: this.total,
         discount: this.form.discount,
         percent: this.form.percent,
         delivery_price: parseInt(this.delivery_price),

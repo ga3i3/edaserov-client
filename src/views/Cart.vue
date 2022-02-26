@@ -26,9 +26,17 @@
 
           <div class="name">
             <span class="product_name">{{ product.name }}</span>
-            <span class="weight">{{ product.weight }}гр.</span>
+            <span class="weight" v-if="product.weight"
+              >{{ product.weight }}гр.</span
+            >
             <span class="price"
-              >{{ product.price }} ₽
+              >{{
+                $store.state.cart[index].id.includes("extra") &&
+                $store.state.cart[index].quantity == 1
+                  ? "Бесплатно"
+                  : product.price + " ₽"
+              }}
+
               <font v-if="Object.keys(product.select).length != 0"
                 >{{ product.select.name }} +{{ product.select.price }}₽</font
               ></span
@@ -72,6 +80,11 @@
     </div>
 
     <div class="lets_checkout" v-if="$store.state.cart.length != 0">
+      <v-checkbox
+        v-show="addExtra"
+        label="Получить бесплатный хлеб и морс"
+        @change="addExtraProd"
+      ></v-checkbox>
       <v-btn block large color="accent" @click="toCheckout">
         <div class="total">{{ getSubtotal }} ₽</div>
         <span class="text">Оформить заказ</span>
@@ -109,6 +122,33 @@ export default {
   name: "Cart",
   data: () => ({
     total: 0,
+    addExtra: false,
+    extraProducts: [
+      {
+        id: "bread_extra",
+        name: "Хлеб 1 кус.",
+        image: "bread.jpg",
+        price: 3,
+        quantity: 1,
+        options: [],
+        stock: 25,
+        weight: 0,
+        select: "",
+        extra: true,
+      },
+      {
+        id: "drink_extra",
+        quantity: 1,
+        name: "Морс 1 стакан (200мл.)",
+        price: 20,
+        options: [],
+        image: "drink.jpg",
+        stock: 25,
+        weight: 0,
+        select: "",
+        extra: true,
+      },
+    ],
   }),
   beforeCreate() {
     if (localStorage.getItem("token") == null) {
@@ -118,7 +158,10 @@ export default {
   created() {
     this.$store.state.currentRoute = "Корзина";
     this.$store.state.value = 1;
+
+    this.heveExtra();
   },
+  watch: {},
   computed: {
     getSubtotal() {
       let total = 0;
@@ -145,7 +188,28 @@ export default {
         );
       }
 
+      let bread = this.$store.state.cart.find((x) => x.id == "bread_extra");
+      let drink = this.$store.state.cart.find((x) => x.id == "drink_extra");
+
+      if (bread != undefined && drink != undefined) {
+        total -= 23;
+      } else if (bread != undefined && drink == undefined) {
+        total -= 3;
+      } else if (drink != undefined && bread == undefined) {
+        total -= 20;
+      }
+
       return total;
+    },
+    heveExtra() {
+      let bread = this.$store.state.cart.find((x) => x.id == "bread_extra");
+      let drink = this.$store.state.cart.find((x) => x.id == "drink_extra");
+
+      if (!bread || !drink) {
+        this.addExtra = true;
+      } else {
+        this.addExtra = false;
+      }
     },
   },
   methods: {
@@ -211,6 +275,39 @@ export default {
       this.$store.state.quantityToggle = [];
       console.log(this.$store.state);
       this.$store.state.removeAllProducts = false;
+    },
+
+    addExtraProducts() {
+      const bread = this.$store.state.cart.find((el) => el.id == "bred");
+      const drink = this.$store.state.cart.find((el) => el.id == "drink");
+    },
+
+    addExtraProd(val) {
+      if (val) {
+        let bread = this.$store.state.cart.find((x) => x.id == "bread_extra");
+        let drink = this.$store.state.cart.find((x) => x.id == "drink_extra");
+
+        if (!bread && !drink) {
+          this.extraProducts.map((item) => {
+            this.$store.state.cart.push(item);
+          });
+        } else if (!bread) {
+          this.$store.state.cart.push(this.extraProducts[0]);
+        } else if (!drink) {
+          this.$store.state.cart.push(this.extraProducts[1]);
+        }
+      } else {
+        const bread = this.$store.state.cart.findIndex(
+          (el) => el.id == "bread"
+        );
+        this.$store.state.cart.splice(bread, 1);
+
+        const drink = this.$store.state.cart.findIndex(
+          (el) => el.id == "drink"
+        );
+
+        this.$store.state.cart.splice(drink, 1);
+      }
     },
   },
 };

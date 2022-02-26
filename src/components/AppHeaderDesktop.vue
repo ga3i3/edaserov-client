@@ -4,10 +4,10 @@
       <div class="wrap">
         <ul>
           <li><router-link to="/">Главная</router-link></li>
-          <li><router-link to="/contacts">Контакты</router-link></li>
-          <li><router-link to="/about">О нас</router-link></li>
-          <li>
-            <router-link to="/payment-delivery">Доставка и оплата</router-link>
+          <li v-for="(page, index) in $store.state.pages" :key="index">
+            <router-link :to="'/page/' + page.slug">{{
+              page.name
+            }}</router-link>
           </li>
         </ul>
       </div>
@@ -19,12 +19,15 @@
       <div class="menu">
         <div class="search">
           <v-text-field
+            v-model="search"
             placeholder="Поиск по товарам"
             filled
             dense
             :clearable="true"
             :hide-details="true"
             append-icon="mdi-magnify"
+            v-on:keyup.enter="onEnter"
+            disabled
           ></v-text-field>
         </div>
       </div>
@@ -55,6 +58,9 @@ export default {
   components: {
     Icon,
   },
+  data: () => ({
+    search: "",
+  }),
   computed: {
     hasToken() {
       if (localStorage.getItem("token") !== null) {
@@ -69,6 +75,16 @@ export default {
       } else {
         return "/profile";
       }
+    },
+  },
+  methods: {
+    onEnter() {
+      this.$router.push({
+        name: "Search",
+        query: {
+          s: this.search,
+        },
+      });
     },
   },
 };

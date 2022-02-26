@@ -1,19 +1,14 @@
 <template>
   <div class="products products_loop">
-    <h1>{{ $store.state.category.name }}</h1>
+    <h1>Результаты поиска: {{ $route.query.s }}</h1>
 
-    <v-alert color="accent" type="info" class="mt-5" v-if="!statusOfCat"
-      >Для категории "{{ getCategoryName($store.state.cat) }}" предложение
-      действует {{ $store.state.category.working[0] + ":00" }} до
-      {{ $store.state.category.working[1] + ":00" }}
-    </v-alert>
-
-    <ul
-      v-if="$store.state.products.length != 0"
-      :class="statusOfCat ? 'working' : 'closed'"
-    >
-      <li v-for="(product, index) in $store.state.products" :key="index">
-        <v-card class="mx-auto my-6" elevation="0">
+    <ul v-if="products.length != 0">
+      <li v-for="(product, index) in products" :key="index">
+        <v-card
+          class="mx-auto my-6"
+          elevation="0"
+          :class="statusOfCat(product.cat) ? 'working' : 'closed'"
+        >
           <v-img height="190" :src="$store.state.url + product.image"></v-img>
 
           <v-card-title class="d-flex justify-space-between align-center"
@@ -73,11 +68,7 @@
       </li>
     </ul>
 
-    <v-alert
-      color="accent"
-      type="info"
-      class="mt-5"
-      v-if="$store.state.products.length == 0"
+    <v-alert color="accent" type="info" class="mt-5" v-if="products.length == 0"
       >На данный момент в этой категории нет блюд</v-alert
     >
 
@@ -100,7 +91,7 @@
 
 <script>
 export default {
-  name: "ProductsLoopMobile",
+  name: "Search",
   data: () => ({
     select: false,
     quantityToggle: [],
@@ -112,12 +103,21 @@ export default {
     // console.log(this.$store.state.cart);
     await this.getAll();
   },
-  computed: {
-    statusOfCat() {
+  computed: {},
+  watch: {
+    select(val) {
+      if (!val) {
+        this.productOptions = "";
+        this.productId = "";
+      }
+    },
+  },
+  methods: {
+    statusOfCat(cat) {
       const date = new Date();
 
       if (this.$store.state.category) {
-        const currentCat = this.$store.state.category;
+        const currentCat = cat;
 
         if (
           date.getHours() >= parseInt(currentCat.working[0]) &&
@@ -129,28 +129,16 @@ export default {
         }
       }
     },
-  },
-  watch: {
-    select(val) {
-      if (!val) {
-        this.productOptions = "";
-        this.productId = "";
-      }
-    },
-  },
-  methods: {
     getAll() {
       this.$axios
-        .get(`${process.env.VUE_APP_MAIN_URL}/product/cat`, {
-          headers: {
-            cat: "laych",
-          },
-        })
+        .get(
+          `${process.env.VUE_APP_MAIN_URL}/product/search?s=${this.$route.query.s}`
+        )
         .then(
           (res) => {
-            this.$store.state.cat = "laych";
-            this.$store.state.products = res.data.doc;
-            this.$store.commit("categoryAndCheckWork");
+            // this.$store.state.cat = "laych";
+            this.products = res.data.doc;
+            // this.$store.commit("categoryAndCheckWork");
           },
           (err) => {
             console.log(err);
