@@ -26,7 +26,7 @@ export default {
     page: {},
   }),
   async created() {
-    await this.$store.commit("params");
+    // await this.$store.commit("params");
     await this.getPage();
   },
   computed: {

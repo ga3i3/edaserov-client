@@ -1,6 +1,6 @@
 <template>
   <v-app :class="workTime ? 'working' : 'closed'">
-    <Alert />
+    <!-- <Alert /> -->
     <AppHeader v-if="getSize <= 500" />
     <AppHeaderDesktop v-if="getSize > 500" />
     <CategoriesSlideDesktop v-if="premession" />
@@ -9,6 +9,8 @@
     </v-main>
     <AppBottomNav v-if="getSize < 500" />
     <AppNavigationDrawer v-if="getSize < 500" />
+
+    <AppFooter v-if="getSize > 500" />
 
     <v-dialog v-model="modal" persistent max-width="490">
       <div class="wrap store_closed">
@@ -56,6 +58,8 @@ import AppNavigationDrawer from "./components/AppNavigationDrawer.vue";
 import AppHeaderDesktop from "./components/AppHeaderDesktop.vue";
 import CategoriesSlideDesktop from "./components/Categories/CategoriesSlideDesktop.vue";
 
+import AppFooter from "./components/AppFooter.vue";
+
 export default {
   name: "App",
   components: {
@@ -66,6 +70,8 @@ export default {
 
     AppHeaderDesktop,
     CategoriesSlideDesktop,
+
+    AppFooter,
   },
   data: () => ({
     width: "",

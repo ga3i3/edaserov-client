@@ -14,11 +14,13 @@
     </div>
     <div class="middle">
       <div class="logo">
-        <img src="../res/logo.png" alt="" />
+        <router-link to="/">
+          <img src="../res/logo.png" alt="" />
+        </router-link>
       </div>
       <div class="menu">
-        <div class="search">
-          <v-text-field
+        <!-- <div class="search"> -->
+        <!-- <v-text-field
             v-model="search"
             placeholder="Поиск по товарам"
             filled
@@ -28,7 +30,19 @@
             append-icon="mdi-magnify"
             v-on:keyup.enter="onEnter"
             disabled
-          ></v-text-field>
+          ></v-text-field> -->
+
+        <!-- </div> -->
+
+        <div class="inform d-flex align-center">
+          <v-btn text depressed href="mailto:help@edaserov.ru" color="accent">
+            <v-icon left>mdi-email</v-icon>
+            help@edaserov.ru
+          </v-btn>
+          <v-btn text depressed color="accent">
+            <v-icon left>mdi-clock</v-icon>
+            с 8:00 до 16:00
+          </v-btn>
         </div>
       </div>
       <div class="actions">

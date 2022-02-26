@@ -57,7 +57,6 @@
     <div class="action text-center">
       <p>
         Нажимая на кнопку вы соглашаетесь с
-        <a href="javascript:void(0)" @click="rules = true">правилами сайта</a> и
         <a href="javascript:void(0)" @click="privacy = true"
           >политикой конфиденциальности</a
         >
@@ -514,6 +513,11 @@ export default {
         data.email.length != 0 &&
         data.delivery.length != 0
       ) {
+        if (data.delivery != "incafe") {
+          let drink = data.cart.findIndex((x) => x.id == "drink_extra");
+          data.cart.splice(drink, 1);
+        }
+
         await this.$axios
           .post(`${process.env.VUE_APP_MAIN_URL}/order/auth`, data, {
             headers: {

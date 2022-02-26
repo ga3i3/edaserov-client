@@ -123,14 +123,17 @@
       <div class="fields mt-5 pl-5 pr-5">
         <v-text-field
           filled
-          label="Номер телефона"
+          label="Email адрес"
           :hide-details="true"
           class="mb-5"
-          prepend-inner-icon="mdi-phone"
+          prepend-inner-icon="mdi-at"
+          v-model="form_forgot.email"
         ></v-text-field>
 
         <div class="actions d-flex justify-center align-center mb-10">
-          <v-btn color="primary" large depressed>Отправить пароль</v-btn>
+          <v-btn color="primary" large depressed @click="forgot"
+            >Отправить пароль</v-btn
+          >
         </div>
 
         <a
@@ -192,6 +195,9 @@ export default {
     form_auth: {
       phone: "",
       password: "",
+    },
+    form_forgot: {
+      email: "",
     },
   }),
   created() {
@@ -261,6 +267,40 @@ export default {
         this.snackbar.text = "Введите корректный номер и пароль";
         this.snackbar.status = true;
       }
+    },
+    forgot() {
+      let validation = this.ValidateEmail(this.form_forgot.email);
+      if (validation) {
+        this.$axios
+          .post(`${process.env.VUE_APP_MAIN_URL}/user/forgot`, {
+            email: this.form_forgot.email,
+          })
+          .then(
+            (res) => {
+              if (res.status == 200) {
+                this.snackbar.text = "На вашу почту отправлен пароль";
+                this.snackbar.status = true;
+                this.auth = "signin";
+              }
+            },
+            (err) => {
+              if (err.response.status == 404) {
+                this.snackbar.text =
+                  "Пользователь с такой почтой не существует";
+                this.snackbar.status = true;
+              }
+            }
+          );
+      } else {
+        this.snackbar.text = "Некорректный email адрес";
+        this.snackbar.status = true;
+      }
+    },
+    ValidateEmail(mail) {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+        return true;
+      }
+      return false;
     },
   },
 };

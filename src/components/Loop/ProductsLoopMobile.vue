@@ -4,7 +4,7 @@
 
     <v-alert color="accent" type="info" class="mt-5" v-if="!statusOfCat"
       >Для категории "{{ getCategoryName($store.state.cat) }}" предложение
-      действует {{ $store.state.category.working[0] + ":00" }} до
+      действует с {{ $store.state.category.working[0] + ":00" }} до
       {{ $store.state.category.working[1] + ":00" }}
     </v-alert>
 

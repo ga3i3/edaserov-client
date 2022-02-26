@@ -71,6 +71,12 @@ const routes = [
 		name: 'Success',
 		component: () => import('../views/Success.vue'),
 	},
+
+	{
+		path: '*',
+		name: 'Error',
+		component: () => import('../views/404.vue'),
+	}
 ]
 
 const router = new VueRouter({
@@ -101,8 +107,10 @@ const router = new VueRouter({
 // 		})
 // 	}
 
-
-
 // })
+
+router.afterEach((to, from) => {
+	window.scrollTo(0, 0);
+})
 
 export default router

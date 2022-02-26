@@ -84,8 +84,16 @@
         v-show="addExtra"
         label="Получить бесплатный хлеб и морс"
         @change="addExtraProd"
+        v-if="getSubtotal >= 170"
       ></v-checkbox>
-      <v-btn block large color="accent" @click="toCheckout">
+      <p v-if="getSubtotal < 170">Минимальная сумма для заказа <b>170 ₽</b></p>
+      <v-btn
+        block
+        large
+        color="accent"
+        @click="toCheckout"
+        :disabled="getSubtotal < 170 ? true : false"
+      >
         <div class="total">{{ getSubtotal }} ₽</div>
         <span class="text">Оформить заказ</span>
       </v-btn>
@@ -123,6 +131,7 @@ export default {
   data: () => ({
     total: 0,
     addExtra: false,
+
     extraProducts: [
       {
         id: "bread_extra",
@@ -462,5 +471,13 @@ li {
   color: #2a2a2a;
   font-family: "Roboto", sans-serif;
   font-weight: 600;
+}
+
+p b {
+  font-family: "Roboto", sans-serif;
+}
+
+button[disabled] {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 </style>
