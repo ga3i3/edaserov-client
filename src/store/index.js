@@ -19,7 +19,8 @@ export default new Vuex.Store({
 		params: {},
 		categories: {},
 		category: {},
-		pages: []
+		pages: [],
+		page: {}
 	},
 	mutations: {
 		params(state) {
@@ -40,7 +41,7 @@ export default new Vuex.Store({
 			);
 
 			state.category = currentCatWork;
-		}
+		},
 	},
 	actions: {
 	},

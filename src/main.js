@@ -8,6 +8,7 @@ import axios from 'axios'
 import VueTheMask from 'vue-the-mask'
 import getUser from './plugins/user'
 import loadParams from './plugins/params'
+import currency from './plugins/currency'
 
 import './assets/styles.scss'
 // import './assets/styles.desktop.scss'
@@ -17,6 +18,7 @@ import './assets/styles.scss'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios;
+Vue.prototype.$currency = currency;
 
 Vue.use(VueTheMask)
 Vue.use(getUser)

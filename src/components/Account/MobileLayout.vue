@@ -14,11 +14,14 @@
       <li class="fund">
         <div class="line">
           <span class="label">Накопительная скидка</span
-          ><span class="value">{{
-            $store.state.user.fund == 0
-              ? "0%"
-              : calcFund($store.state.user.fund)
-          }}</span>
+          ><span class="value"
+            >{{ getUserFund
+            }}{{
+              $store.state.user.fund == 0
+                ? "0%"
+                : calcFund($store.state.user.fund)
+            }}</span
+          >
         </div>
         <div class="description">
           <router-link to="/blog/nokopitelnaya-skidka">Подробнее</router-link>
@@ -52,7 +55,8 @@ export default {
     Icon,
   },
   data: () => ({}),
-  async created() {},
+  created() {},
+  mounted() {},
   computed: {
     getOrdersCount() {
       let count = this.$store.state.user.orders.length;
@@ -63,6 +67,9 @@ export default {
       } else {
         return count + " заказов";
       }
+    },
+    getUserFund() {
+      return this.$currency(this.$store.state.user.fund);
     },
   },
   methods: {

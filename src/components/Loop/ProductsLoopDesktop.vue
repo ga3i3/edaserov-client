@@ -82,7 +82,7 @@
               color="primary"
               depressed
               v-if="!$store.state.quantityToggle.includes(product._id)"
-              @click="addToCart(product)"
+              @click="addToCart(product, index)"
             >
               В корзину
             </v-btn>
@@ -97,6 +97,20 @@
       v-if="$store.state.products.length == 0"
       >На данный момент в этой категории нет блюд</v-alert
     >
+    <v-snackbar
+      v-model="snackbar.status"
+      color="accent"
+      rounded="pill"
+      elevation="0"
+      timeout="2500"
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="snackbar.status = false">
+          Закрыть
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -112,6 +126,11 @@ export default {
     currentProduct: {
       id: "",
       value: {},
+    },
+    currentOption: [],
+    snackbar: {
+      status: false,
+      text: "",
     },
   }),
   async created() {
@@ -162,30 +181,58 @@ export default {
         );
     },
     addToCart(product) {
-      this.$store.state.quantityToggle.push(product._id);
-      this.$store.state.cart.push({
-        id: product._id,
-        quantity: 1,
-        name: product.name,
-        price: product.price,
-        options: product.options,
-        image: product.image,
-        stock: product.stock,
-        weight: product.weight,
-        select:
-          this.currentProduct.id == product._id
-            ? this.currentProduct.option
-            : {},
-      });
-      this.productId = product._id;
-      this.productOptions = product.options;
-      this.select = true;
+      if (product.options != 0) {
+        let indexProductInCart = this.currentOption.findIndex(
+          (x) => x.pd_id === product._id
+        );
+
+        if (indexProductInCart == -1) {
+          this.snackbar.status = true;
+          this.snackbar.text = "Пожалуйста выберите опцию";
+        } else {
+          this.$store.state.quantityToggle.push(product._id);
+
+          this.$store.state.cart.push({
+            id: product._id,
+            quantity: 1,
+            name: product.name,
+            price: product.price,
+            options: product.options,
+            image: product.image,
+            stock: product.stock,
+            weight: product.weight,
+            select: this.currentOption[indexProductInCart].option,
+          });
+          this.productId = product._id;
+          this.productOptions = product.options;
+          this.select = true;
+        }
+      } else {
+        this.$store.state.quantityToggle.push(product._id);
+
+        this.$store.state.cart.push({
+          id: product._id,
+          quantity: 1,
+          name: product.name,
+          price: product.price,
+          options: product.options,
+          image: product.image,
+          stock: product.stock,
+          weight: product.weight,
+          select: {},
+        });
+        this.productId = product._id;
+        this.productOptions = product.options;
+        this.select = true;
+      }
     },
     currentProductQuantity(id) {
       let indexProductInCart = this.$store.state.cart.findIndex(
         (x) => x.id === id
       );
-      return this.$store.state.cart[indexProductInCart].quantity;
+      if (indexProductInCart > -1) {
+        return this.$store.state.cart[indexProductInCart].quantity;
+      }
     },
     quantityPlus(stock, id) {
       let indexProductInCart = this.$store.state.cart.findIndex(
@@ -222,16 +269,26 @@ export default {
     },
 
     changeOption(id, option) {
-      this.currentProduct.id = id;
-      this.currentProduct.option = option;
-
-      let indexProductInCart = this.$store.state.cart.findIndex(
-        (x) => x.id === id
+      let indexProductInCart = this.currentOption.findIndex(
+        (x) => x.pd_id === id
       );
 
       if (indexProductInCart > -1) {
-        this.$store.state.cart[indexProductInCart].select = option;
+        this.currentOption[indexProductInCart].option = option;
+      } else {
+        console.log(indexProductInCart);
+        this.currentOption.push({
+          pd_id: id,
+          option: option,
+        });
       }
+
+      // this.currentProduct.id = id;
+      // this.currentProduct.option = option;
+
+      // if (indexProductInCart > -1) {
+      //   this.$store.state.cart[indexProductInCart].select = option;
+      // }
     },
     getCategoryName(name) {
       switch (name) {

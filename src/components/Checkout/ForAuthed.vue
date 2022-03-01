@@ -324,9 +324,24 @@ export default {
         return false;
       }
     },
+    getWorkPickup() {
+      const date = new Date();
+
+      if (
+        date.getHours() >=
+          parseInt(this.$store.state.params.delivery.working_time[0]) &&
+        date.getHours() <=
+          parseInt(this.$store.state.params.delivery.working_time[1])
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     onLoad() {
+      this.form.name = this.$store.state.user.name;
       this.form.phone = this.$store.state.user.phone;
       this.form.email = this.$store.state.user.email;
     },

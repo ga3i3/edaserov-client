@@ -15,14 +15,19 @@
         <li class="fund">
           <div class="line">
             <span class="label">Накопительная скидка</span
-            ><span class="value">{{
-              $store.state.user.fund == 0
-                ? "0%"
-                : calcFund($store.state.user.fund)
-            }}</span>
+            ><span class="value">
+              {{
+                $store.state.user.fund == 0
+                  ? "0%"
+                  : calcFund($store.state.user.fund)
+              }}</span
+            >
           </div>
           <div class="description">
-            <router-link to="/blog/nokopitelnaya-skidka">Подробнее</router-link>
+            <router-link to="/page/bonusi">Подробнее</router-link>
+            <span
+              ><b>{{ getUserFund }}</b></span
+            >
           </div>
         </li>
         <li class="orders" @click="$router.push('/account/orders')">
@@ -40,6 +45,8 @@
           <div class="description">Редактировать профиль</div>
         </li>
       </ul>
+
+      <v-btn block depressed large to="/" color="accent">В каталог</v-btn>
     </div>
   </div>
 </template>
@@ -68,6 +75,9 @@ export default {
       } else {
         return count + " заказов";
       }
+    },
+    getUserFund() {
+      return this.$currency(this.$store.state.user.fund);
     },
   },
   methods: {
@@ -145,7 +155,7 @@ ul {
       }
 
       .value {
-        font-family: "Oswald", sans-serif;
+        font-family: "Exo 2", sans-serif;
         font-weight: 500;
         color: #ef7b4f;
       }
@@ -163,10 +173,26 @@ ul {
     justify-content: space-between;
 
     .value {
-      font-family: "Oswald", sans-serif !important;
+      font-family: "Exo 2", sans-serif !important;
       svg {
         font-size: 22px;
       }
+    }
+  }
+
+  li.fund {
+    .value {
+      font-family: "Exo 2", sans-serif;
+    }
+  }
+
+  li.fund .description {
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      font-family: "Exo 2", sans-serif;
+      color: #ef7b4f;
     }
   }
 }

@@ -130,8 +130,6 @@ export default {
       if (Object.keys(this.$store.state.params).length != 0) {
         if (this.$store.state.params.working == true) {
           if (
-            date.getDay() > 0 &&
-            date.getDay() < 6 &&
             date.getHours() >=
               parseInt(this.$store.state.params.working_time[0]) &&
             date.getHours() <=

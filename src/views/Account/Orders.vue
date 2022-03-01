@@ -42,14 +42,7 @@
             <ul>
               <li v-for="(item, index) in order.cart" :key="index">
                 <p>
-                  ×{{ item.quantity }}
-                  <b>{{
-                    item.name +
-                    " " +
-                    (item.options.length > 0
-                      ? `(${item.select.name} +${currency(item.select.price)})`
-                      : "")
-                  }}</b>
+                  <b>×{{ item.quantity }}</b> {{ item.name }}
                 </p>
               </li>
             </ul>
@@ -179,7 +172,7 @@ ul.orders {
   }
 
   * {
-    font-family: "Roboto", sans-serif;
+    font-family: "Exo 2", sans-serif;
   }
 }
 </style>

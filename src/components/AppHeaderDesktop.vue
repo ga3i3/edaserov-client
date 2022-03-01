@@ -5,9 +5,7 @@
         <ul>
           <li><router-link to="/">Главная</router-link></li>
           <li v-for="(page, index) in $store.state.pages" :key="index">
-            <router-link :to="'/page/' + page.slug">{{
-              page.name
-            }}</router-link>
+            <a :href="'/page/' + page.slug">{{ page.name }}</a>
           </li>
         </ul>
       </div>

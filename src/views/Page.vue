@@ -1,6 +1,10 @@
 <template>
   <div class="default">
-    <img :src="url + page.image" alt="" v-if="getSize <= 500" />
+    <img
+      :src="url + page.image"
+      alt=""
+      v-if="getSize <= 500 && page.image != ''"
+    />
     <div class="header">
       <h1>{{ page.name }}</h1>
       <span
